@@ -1,1 +1,10 @@
 /* You can add global styles to this file, and also import other style files */
+.app-dynamic {
+  display: flex;
+  padding: 1em;
+}
+
+.selected {
+  border: 1px solid red;
+  margin: 0.5em;
+}

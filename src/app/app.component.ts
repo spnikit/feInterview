@@ -1,13 +1,12 @@
 import { Component } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
 
 @Component({
-  selector: 'app-root',
-  standalone: true,
-  imports: [RouterOutlet],
-  templateUrl: './app.component.html',
-  styleUrl: './app.component.scss'
+    selector: 'app-root',
+    template: `
+        <a routerLink="/task-1">Task #1</a> <br/>
+        <a routerLink="/task-2">Task #2</a> <br/>
+        <a routerLink="/task-3">Task #3</a> <br/>
+        <a routerLink="/task-4">Task #4</a> <br/>
+        <router-outlet/>`,
 })
-export class AppComponent {
-  title = 'frontend-02-24';
-}
+export class AppComponent {}
