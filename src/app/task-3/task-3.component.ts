@@ -1,4 +1,5 @@
-import {Component} from '@angular/core';
+import {Component, ViewChild, ViewContainerRef} from '@angular/core';
+import {DynamicComponent} from "../dynamic/dynamic.component";
 
 @Component({
   selector: 'app-task-3',
@@ -6,11 +7,14 @@ import {Component} from '@angular/core';
   <button (click)="createComponent()">Создать</button>
   <br/>
 
-  <div>
+  <div #container>
     <!-- PLACE FOR RENDERER -->
   </div>`,
 })
 export class Task3Component {
+
+
+  @ViewChild('container', {read: ViewContainerRef}) container!: ViewContainerRef;
 
   /**
    * 1. Клик на "Создать" должен создать компонент "DynamicComponent" внутри тега div: <!-- PLACE FOR RENDERER -->
@@ -23,5 +27,10 @@ export class Task3Component {
    * ...
    */
   public createComponent(): void {
+    if (this.container) {
+      this.container.clear();
+      const dynamicComponentRef = this.container.createComponent(DynamicComponent);
+      console.log(dynamicComponentRef.instance.value);
+    }
   }
 }

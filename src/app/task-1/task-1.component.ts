@@ -1,5 +1,6 @@
-import {Component} from '@angular/core';
-import {Observable, of, timer} from 'rxjs';
+import {Component, DestroyRef} from '@angular/core';
+import {Observable, of, switchMap, takeWhile, tap, timer} from 'rxjs';
+import {takeUntilDestroyed} from "@angular/core/rxjs-interop";
 
 enum ServerResponse {
   Done = 'Done',
@@ -14,7 +15,7 @@ export class Task1Component {
   /**
    *
    */
-  constructor() {
+  constructor(private destroyRef: DestroyRef) {
     this.task1();
   }
 
@@ -23,7 +24,7 @@ export class Task1Component {
    *
    * Задача:
    * 1. Улучшите код функции;
-   * 2. Когда метод httpEmit вернет Done, прекратите выполнение запрсоов;
+   * 2. Когда метод httpEmit вернет Done, прекратите выполнение запросов;
    * 3. Прекратите выполнение запросов в момент ухода со страницы.
    *
    * Сообщения в консоле должны быть следующими:
@@ -35,14 +36,12 @@ export class Task1Component {
    * Done
    */
   private task1(): void {
-    timer(0, 1000).subscribe((value) => {
-      this.httpEmit(value).subscribe({
-        next: (value) => {
-          /* ... Payload ... */
-          console.log(value);
-        },
-      });
-    });
+    timer(0, 1000).pipe(
+      switchMap(timerCount => this.httpEmit(timerCount)),
+      tap(console.log),
+      takeWhile(emitValue => emitValue !== ServerResponse.Done),
+      takeUntilDestroyed(this.destroyRef)
+    ).subscribe()
   }
 
   /**
