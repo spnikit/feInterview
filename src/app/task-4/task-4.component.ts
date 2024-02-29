@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, ElementRef, inject, QueryList, Renderer2, ViewChildren} from '@angular/core';
+import {Component, effect, ElementRef, inject, Renderer2, viewChildren} from '@angular/core';
 import {DynamicComponent} from "../dynamic/dynamic.component";
 
 
@@ -14,20 +14,23 @@ import {DynamicComponent} from "../dynamic/dynamic.component";
   <app-dynamic></app-dynamic>
   `,
 })
-export class Task4Component implements AfterViewInit {
+export class Task4Component {
 
   private classToAdd = 'selected'
   private renderer = inject(Renderer2)
 
-  @ViewChildren(DynamicComponent, {read: ElementRef}) queryList!: QueryList<ElementRef>
+  private queryList = viewChildren(DynamicComponent, {read: ElementRef})
 
 
-  ngAfterViewInit(): void {
-    this.queryList.forEach((dynamicComponent, idx) => {
-      if (idx % 2 === 0) {
-        this.renderer.addClass(dynamicComponent.nativeElement, this.classToAdd)
-      }
-    })
+  constructor() {
+    effect(() => {
+      this.queryList().forEach((dynamicComponent, idx) => {
+        if (idx % 2 === 0) {
+          this.renderer.addClass(dynamicComponent.nativeElement, this.classToAdd)
+        }
+      })
+    });
+
   }
 
 
