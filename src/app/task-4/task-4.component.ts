@@ -1,4 +1,5 @@
-import {Component} from '@angular/core';
+import {Component, effect, ElementRef, inject, Renderer2, viewChildren} from '@angular/core';
+import {DynamicComponent} from "../dynamic/dynamic.component";
 
 
 @Component({
@@ -14,6 +15,25 @@ import {Component} from '@angular/core';
   `,
 })
 export class Task4Component {
+
+  private classToAdd = 'selected'
+  private renderer = inject(Renderer2)
+
+  private queryList = viewChildren(DynamicComponent, {read: ElementRef})
+
+
+  constructor() {
+    effect(() => {
+      this.queryList().forEach((dynamicComponent, idx) => {
+        if (idx % 2 === 0) {
+          this.renderer.addClass(dynamicComponent.nativeElement, this.classToAdd)
+        }
+      })
+    });
+
+  }
+
+
   /**
    * Задача:
    *
